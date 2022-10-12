@@ -19,6 +19,7 @@ def tokez(text):
         no_stopword = [t for t in newtext if t not in thai_stopwords()]
         # print(no_stopword)
         articles.append(no_stopword)
+        dictionary = Dictionary(articles)
 
 
 tokez(["จึงสู้อุตส่าห์ซื้อหนังสือแปลที่อ่านไม่ค่อยรู้เรื่องมาช่วยแปลไทยเป็นไทยอีกทีหนึ่ง",
@@ -28,11 +29,16 @@ tokez(["จึงสู้อุตส่าห์ซื้อหนังสื
 dictionary = Dictionary(articles)
 corpus = [dictionary.doc2bow(a) for a in articles]
 
-
+result=[]
 doc = corpus[0]
 tfidf = TfidfModel(corpus)
 tfidf_weights = tfidf[doc]
-print(tfidf_weights)
+sorted_tfidf_weights = sorted(
+    tfidf_weights, key=lambda w: w[1], reverse=True)
+for term_id, weight in sorted_tfidf_weights[:5]:
+    tmp = dictionary.get(term_id), weight
+    result.append(tmp)
+print(result)
 
 
 # print(tfidf)
