@@ -17,6 +17,7 @@ if __name__ == '__main__':
     articles = []
 
     def main():
+
         # testtext = """เนื่องจากประโยคภาษาไทย (และอีกหลายๆ ภาษา) คือการเรียงคำหลายๆ คำ ต่อกัน โดยไม่ได้มีการเว้นวรรคระหว่างคำ (space) แบบภาษาอังกฤษ ใครที่มีประโยคภาษาไทย และต้องการแยกในประโยคเพื่อการใช้งานใดๆ ก็ตาม จะต้องประสบกับปัญหาของการไม่มี space ที่ว่า และ PyThaiNLP ก็เข้ามาช่วยในตรงนี้
         # """
         testtext = '''เปิดใจจจจจครูศูนย์เด็กเล็กหนองบัวลำภู ร่ำไห้บอกไม่เอะใจ อดีตตำรวจบุกกราดยิง เพราะเป็นผู้ปกครอง ลูกก็เรียนที่นี่ พอรู้ว่ากำลังก่อเหตุ รีบวิ่งไปหาคนช่วย แต่ไม่ทัน
@@ -58,6 +59,7 @@ if __name__ == '__main__':
         text = clean_msg(text)
         # ตัดประโยค โดยใช้ วรรคและขึ้นบรรทัดใหม่
         text = sent_tokenize(text, engine="whitespace+newline")
+        # text = mysent_tokenize(text)
         for i in text:
             newtext = word_tokenize(i, engine='mm')
             no_stopword = [
@@ -78,5 +80,12 @@ if __name__ == '__main__':
             tmp = dictionary.get(term_id), weight
             result.append(tmp)
         print(result)
+
+    def mysent_tokenize(text):
+        f = open("./asset/santhan.txt", "r", encoding="utf-8")
+        print(f.read())
+        text = text.split(" ")
+        for i in text:
+            x = 0
 
     main()
