@@ -12,8 +12,56 @@ import itertools
 from pythainlp import sent_tokenize
 import re
 import string
-
+from heapq import nlargest
+from string import punctuation
+thai_stw = list(thai_stopwords())
 app = Flask(__name__)
+
+
+def sumtext(text):
+    word_th = word_tokenize(text)
+
+    word_freq_th = {}
+    for word in word_th:
+        if word not in thai_stw:
+            if word not in punctuation:
+                if word not in " ":
+                    if word not in word_freq_th.keys():
+                        word_freq_th[word] = 1
+                    else:
+                        word_freq_th[word] += 1
+
+    sorted(word_freq_th.items(), key=lambda x: x[1], reverse=True)
+    # print(word_freq_th)
+
+    max_freq_th = max(word_freq_th.values())
+    for word in word_freq_th.keys():
+        word_freq_th[word] = word_freq_th[word]/max_freq_th
+
+    sorted(word_freq_th.items(), key=lambda x: x[1], reverse=True)
+    print(word_freq_th)
+    sent_th = sent_tokenize(text)
+    # print(sent_th)
+
+    sent_scores_th = {}  # สร้าง dictionary
+    for sent in sent_th:  # นำประโยคที่ตัดไว้ทุกประโยคมาคำนวณ
+        for word in sent:  # เช็ค[คำ]ที่มีในประโยค A
+            if word in word_freq_th.keys():  # ถ้าคำในประโยค A มีใน dictionary ของ word_freq_th(เก็บความถี่ของคำที่ตัดได้)
+                if sent not in sent_scores_th.keys():  # ถ้าประโยคไม่ได้อยู่ใน dictionary ของ sent_scores_th
+                    # ให้ sentence scores เท่ากับ ค่าความถี่ที่ normalize เเล้วของ word frequencies
+                    sent_scores_th[sent] = word_freq_th[word]
+                else:  # ถ้าประโยคอยู่ใน dictionary ของ sent_scores_th
+                    sent_scores_th[sent] += word_freq_th[word]
+    sorted(sent_scores_th.items(), key=lambda x: x[1], reverse=True)
+
+    select_len_th = int(len(sent_scores_th)*0.1)
+    # print(select_len_th)
+
+    # เเสดงประโยคที่มีความสำคัญมากที่สุดจากค่า sentence scores โดยข้อมูลตัวที่ 1เเละ 2 จาก dict เนื่องจากความยาว len เท่ากับ 2
+    sum_th = nlargest(select_len_th, sent_scores_th, key=sent_scores_th.get)
+    # print(sum_th)
+    sum_th = "".join(sum_th)
+    return(sum_th)
 
 
 def uniquelist(list1):
@@ -47,9 +95,8 @@ def tokez(text):
     text = sent_tokenize(text)
     # text = mysent_tokenize(text)
     for i in text:
-        newtext = word_tokenize(i, engine='deepcut')
-        no_stopword = [
-            t for t in newtext if t not in thai_stopwords()]
+        newtext = word_tokenize(i, engine='mm')
+        no_stopword = [t for t in newtext if t not in thai_stopwords()]
         articles.append(no_stopword)
 
 
@@ -84,7 +131,7 @@ def main():
         data = gettfidf(text)
         # return jsonify(data)
         print(data)
-        return render_template('index.html', data=data)
+        return render_template('index.html', data=data, textsum=sumtext(text))
     return render_template('index.html')
 
 
