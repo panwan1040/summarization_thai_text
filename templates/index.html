@@ -39,8 +39,10 @@
           url: "/",
         }).done(function (data) {
           var textValue = $("#textarea").val();
-          if (textValue != "") $("#output").html(data).show();
-          else $("#output").hide();
+          {% for i in data %}
+            if (textValue != "") $("#output").html(i).show();
+            else $("#output").hide();
+          {% endfor %}
         });
         e.preventDefault();
       });

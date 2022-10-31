@@ -12,6 +12,7 @@ from gensim.models.tfidfmodel import TfidfModel
 from tkinter import N
 from operator import index
 from string import punctuation
+thai_stopwords = list(thai_stopwords())
 
 
 def mysent_tokenize(text):
@@ -78,7 +79,6 @@ text = """ปฏิบัติการของ กองทัพรัสเ
 
 def sumtext(text):
     word_th = word_tokenize(text)
-    thai_stopwords = list(thai_stopwords())
 
     word_freq_th = {}
     for word in word_th:
@@ -91,13 +91,14 @@ def sumtext(text):
                         word_freq_th[word] += 1
 
     sorted(word_freq_th.items(), key=lambda x: x[1], reverse=True)
+    # print(word_freq_th)
 
     max_freq_th = max(word_freq_th.values())
     for word in word_freq_th.keys():
         word_freq_th[word] = word_freq_th[word]/max_freq_th
 
     sorted(word_freq_th.items(), key=lambda x: x[1], reverse=True)
-
+    print(word_freq_th)
     sent_th = sent_tokenize(text)
     # print(sent_th)
 
