@@ -6,29 +6,37 @@ from operator import index
 def mysent_tokenize(text):
     santhan = getsanthan("./asset/santhan.txt")
     text = text.split(" ")
-    listsent = []
+    # listsent = []
     index = 0
+    # print(text)
     for i in text:
-        # text เป็น "เล่าเหตุการณ์ที่เกิดขึ้นว่า"
         tmplist = ""
+        # for สำหรับจัดการคำหลังสุดที่เป็นคำสันธานให้เชื่อมกับประโยคถัดไป
         for san in santhan:
-            # print(i.split(san))
-            # เชื่อม ประโยคหลัง
+            # ถ้าประโยคหลังเป็นคำสันธาน
             if i.split(san)[len(i.split(san))-1] == "":
                 if i != "":
-                    print(i)
-                    tmplist += i+" "+text[index+1]
-
-            # เชื่อม ประโยคหน้า
+                    # print(i)
+                    # เชื่อมประโยคถัดไป
+                    tmplist = i + " " + text[index+1]
+                    text[index] = ""
+                    text[index+1] = tmplist
+        index += 1
+    index = 0
+    for i in text:
+        tmplist = ""
+        # for สำหรับจัดการคำหน้าสุดที่เป็นคำสันธานให้เชื่อมกับประโยคก่อนหน้า
+        for san in santhan:
+            # ถ้าประโยคหน้าเป็นคำสันธาน
             if i.split(san)[0] == "":
                 if i != "":
-                    print(i)
-                    tmplist += text[index-1]+" "+i
-
-        if i != "":
-            listsent.append(tmplist)
+                    tmplist = text[index-1] + " " + i
+                    # print(tmplist)
+                    text[index-1] = ""
+                    text[index] = tmplist
+        # listsent.append(tmplist)
         index += 1
-    print(listsent)
+    return list(filter(None, text))
 
 
 def getsanthan(pathfile):
@@ -36,6 +44,18 @@ def getsanthan(pathfile):
     return f.read().split("\n")
 
 
+def uniquelist(list1):
+
+    # initialize a null list
+    unique_list = []
+
+    # traverse for all elements
+    for x in list1:
+        # check if exists in unique_list or not
+        if x not in unique_list:
+            unique_list.append(x)
+    # print list
+    return unique_list
 # mysent_tokenize("xx")
 
 
