@@ -59,7 +59,7 @@ def sumtext(text):
 
     # เเสดงประโยคที่มีความสำคัญมากที่สุดจากค่า sentence scores โดยข้อมูลตัวที่ 1เเละ 2 จาก dict เนื่องจากความยาว len เท่ากับ 2
     sum_th = nlargest(select_len_th, sent_scores_th, key=sent_scores_th.get)
-    # print(sum_th)
+    print(sum_th)
     sum_th = "".join(sum_th)
     return(sum_th)
 
@@ -129,6 +129,7 @@ def main():
         text2 = sumtext(text)
         tfidf = gettfidf(text)
         data = {'sum': text2, 'tf': tfidf}
+        print(data['sum'], "ssssssssssssssss")
         return jsonify(data)
         # return render_template('index.html', data=data, textsum=text2)
     return render_template('index.html')
