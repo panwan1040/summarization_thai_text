@@ -14,7 +14,6 @@ import re
 import string
 
 app = Flask(__name__)
-articles = []
 
 
 def uniquelist(list1):
@@ -76,11 +75,16 @@ def gettfidf(text):
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
+    global articles
+
     if request.method == "POST":
         articles = []
-        text = request.form['text'].strip()
+        text = request.form.get("textarea")
+        # text = request.form['text'].strip()
         data = gettfidf(text)
-        return jsonify(data)
+        # return jsonify(data)
+        print(data)
+        return render_template('index.html', data=data)
     return render_template('index.html')
 
 

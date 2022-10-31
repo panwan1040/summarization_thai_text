@@ -13,7 +13,7 @@
   </head>
   <body>
     <h1 align="center">การหาใจความสำคัญของข้อความ</h1>
-    <form id="form" align="center">
+    <form id="form" align="center" method="post" enctype="multipart/form-data">
       <textarea
         id="textarea"
         name="textarea"
@@ -24,28 +24,8 @@
       ></textarea
       ><br />
       <button id="submit">Submit</button>
+      {% if data :%} {{ data,"-----------------------------" }} {% endif %}
       <div id="output"></div>
     </form>
   </body>
-  <script>
-    $("#output").hide();
-    $(document).ready(function () {
-      $("#form").on("submit", function (e) {
-        $.ajax({
-          data: {
-            text: $("#textarea").val(),
-          },
-          type: "POST",
-          url: "/",
-        }).done(function (data) {
-          var textValue = $("#textarea").val();
-          {% for i in data %}
-            if (textValue != "") $("#output").html(i).show();
-            else $("#output").hide();
-          {% endfor %}
-        });
-        e.preventDefault();
-      });
-    });
-  </script>
 </html>
