@@ -39,7 +39,7 @@ def sumtext(text):
         word_freq_th[word] = word_freq_th[word]/max_freq_th
 
     sorted(word_freq_th.items(), key=lambda x: x[1], reverse=True)
-    print(word_freq_th)
+    # print(word_freq_th)
     sent_th = sent_tokenize(text)
     # print(sent_th)
 
@@ -53,8 +53,8 @@ def sumtext(text):
                 else:  # ถ้าประโยคอยู่ใน dictionary ของ sent_scores_th
                     sent_scores_th[sent] += word_freq_th[word]
     sorted(sent_scores_th.items(), key=lambda x: x[1], reverse=True)
+    select_len_th = int(len(sent_scores_th)*0.65)
 
-    select_len_th = int(len(sent_scores_th)*0.1)
     # print(select_len_th)
 
     # เเสดงประโยคที่มีความสำคัญมากที่สุดจากค่า sentence scores โดยข้อมูลตัวที่ 1เเละ 2 จาก dict เนื่องจากความยาว len เท่ากับ 2
@@ -112,26 +112,25 @@ def gettfidf(text):
         tfidf_weights = tfidf[doc]
         sorted_tfidf_weights = sorted(
             tfidf_weights, key=lambda w: w[1], reverse=True)
-        for term_id, weight in sorted_tfidf_weights[:5]:
-            tmpword, tmpvalue = dictionary.get(term_id), weight
-            result.append([tmpword, tmpvalue])
-
-    result = uniquelist(result)
+    for term_id, weight in sorted_tfidf_weights[:10]:
+        tmpword, tmpvalue = dictionary.get(term_id), weight
+        result.append([tmpword, tmpvalue])
+    # result = uniquelist(result)
     return(result)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
     global articles
-
     if request.method == "POST":
         articles = []
-        text = request.form.get("textarea")
-        # text = request.form['text'].strip()
-        data = gettfidf(text)
-        # return jsonify(data)
-        print(data)
-        return render_template('index.html', data=data, textsum=sumtext(text))
+        # text = request.form.get("""textarea""")
+        text = request.form['text'].strip()
+        text2 = sumtext(text)
+        tfidf = gettfidf(text)
+        data = {'sum': text2, 'tf': tfidf}
+        return jsonify(data)
+        # return render_template('index.html', data=data, textsum=text2)
     return render_template('index.html')
 
 

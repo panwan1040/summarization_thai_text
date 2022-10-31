@@ -10,10 +10,14 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
     />
+    <script
+      src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"
+      defer
+    ></script>
   </head>
   <body>
     <h1 align="center">การหาใจความสำคัญของข้อความ</h1>
-    <form id="form" align="center" method="post" enctype="multipart/form-data">
+    <form id="form" align="center">
       <textarea
         id="textarea"
         name="textarea"
@@ -24,10 +28,47 @@
       ></textarea
       ><br />
       <button id="submit">Submit</button>
-      {% if data :%} {{ data }}
+      <!-- {% if data :%} {{ data }} -->
       <br />
-      {{ textsum }} {% endif %}
-      <div id="output"></div>
+      <!-- {{ textsum }} {% endif %} -->
+      <table id="example4" width="100%"></table>
+      <div id="output2"></div>
     </form>
   </body>
+  <script>
+    $("#output").hide();
+    $(document).ready(function () {
+      $("#form").on("submit", function (e) {
+        $.ajax({
+          data: {
+            text: $("#textarea").val(),
+          },
+          type: "POST",
+          url: "/",
+        }).done(function (data) {
+          var tt = $("#textarea").val();
+          if (tt != "") $("#output2").html(data.sum).show();
+          // if (tt != "") $("#output").html(data.tf).show();
+          var myTable =
+            '<table class="table-fill">' +
+            "<thead>" +
+            "<tr>" +
+            '<th class="text-left">Keywords</th>' +
+            '<th class="text-left">%(Words)</th>' +
+            "</tr>" +
+            "</thead>" +
+            '<tbody class="table-hover">';
+          for (var i = 0; i < 10; i++) {
+            myTable += `<tr>
+              <td class="text-left">${data.tf[i][0]}</td>
+              <td class="text-left">${data.tf[i][1]}</td>
+              </tr>`;
+          }
+          ("</tbody>");
+          document.getElementById("example4").innerHTML = myTable;
+        });
+        e.preventDefault();
+      });
+    });
+  </script>
 </html>
