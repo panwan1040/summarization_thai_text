@@ -1,5 +1,16 @@
 
 
+import string
+import re
+from pythainlp import sent_tokenize
+import itertools
+from collections import defaultdict
+from gensim.corpora.dictionary import Dictionary
+from pythainlp.corpus import download, get_corpus_path
+from pythainlp.corpus import thai_stopwords
+from pythainlp.tokenize import word_tokenize
+from gensim.models.tfidfmodel import TfidfModel
+from tkinter import N
 from operator import index
 
 
@@ -56,8 +67,8 @@ def uniquelist(list1):
             unique_list.append(x)
     # print list
     return unique_list
+
+
 # mysent_tokenize("xx")
-
-
 mysent_tokenize(
     "ณ บึงใหญ่ในป่าแห่งหนึ่ง ห่านและนกกระสาชวนกันเดินท่องน้ำหาปลาเล็กปลาน้อยกินเป็นอาหาร สัตว์ทั้งสองไม่รู้ตัวเลยว่าเบื้องหลังพุ่มไม้ที่อยู่ริมบึงนั้น พรานป่าคนหนึ่งยืนถือปืนคอยท่าจะยิงพวกมันอยู่ ในขณะที่นกกระสาค่อยๆ จับปลากินอย่างไม่รีบร้อนนั้น ห่านกลับก้มหน้าก้มตากินอย่างไม่ยั้ง เมื่อนกกระสาหันมาเห็น มันจึงพูดเดือนขึ้นว่า นี่ท่าน ถ้ากินมากขนาดนี้ระวังบินไม่ไหวนะ")
